@@ -4,6 +4,8 @@
 #
 
 from tkinter import filedialog, Label
+from PIL import Image,ImageTk
+from decoder import Decoder
 
 class Driver:
   def __init__(self, root):
@@ -11,14 +13,18 @@ class Driver:
     self.root = root
 
   def addFile(self):
-    for widget in self.root.winfo_children():
-      widget.destroy()
-
-    filename = filedialog.askopenfilename(initialdir="~/Projects", title="Select file",
-    filetypes=(("PNG Images", "*.png"), ("PNG Images", "*.PNG")))
+    filename = filedialog.askopenfilename(initialdir="~/Projects",
+    title="Select file",filetypes=(("PNG Images", "*.png"), ("PNG Images", "*.PNG")))
     self.files.append(filename)
+    decoder = Decoder(filename)
+    decoder.decode()
+    
 
     for file in self.files:
-      label = Label(self.root, text=file, bg="gray")
-      label.pack()
+      photo_file = Image.open(file)
+      photo_file = photo_file.resize((600, 600),Image.ANTIALIAS)
+      photo = ImageTk.PhotoImage(photo_file)
+      label = Label(self.root, image=photo)
+      label.image=photo
+      label.grid()
 
