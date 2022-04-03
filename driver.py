@@ -18,7 +18,7 @@ class Driver:
     self.files.append(filename)
     decoder = Decoder(filename)
     decoder.decode()
-    
+    decoder.header_info()
 
     for file in self.files:
       photo_file = Image.open(file)
@@ -27,4 +27,3 @@ class Driver:
       label = Label(self.root, image=photo)
       label.image=photo
       label.grid()
-
