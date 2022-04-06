@@ -3,9 +3,11 @@
 # frontend
 #
 
-from tkinter import filedialog, Label
-from PIL import Image,ImageTk
+from tkinter import filedialog
+#from PIL import Image
 from decoder import Decoder
+from cv2 import *
+from display import display
 
 class Driver:
   def __init__(self, root):
@@ -13,18 +15,10 @@ class Driver:
     self.root = root
 
   def addFile(self):
-    filename = filedialog.askopenfilename(initialdir="~/Projects",
+    filename = filedialog.askopenfilename(initialdir="~/Pictures",
     title="Select file",filetypes=(("PNG Images", "*.png"), ("PNG Images", "*.PNG")))
     self.files.append(filename)
     decoder = Decoder(filename)
     decoder.decode()
     
-
-    for file in self.files:
-      photo_file = Image.open(file)
-      photo_file = photo_file.resize((600, 600),Image.ANTIALIAS)
-      photo = ImageTk.PhotoImage(photo_file)
-      label = Label(self.root, image=photo)
-      label.image=photo
-      label.grid()
-
+    display(filename)
