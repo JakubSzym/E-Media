@@ -3,8 +3,7 @@
 # frontend
 #
 
-from tkinter import filedialog
-#from PIL import Image
+from tkinter import Label, filedialog
 from decoder import Decoder
 from cv2 import *
 from display import display
@@ -20,5 +19,17 @@ class Driver:
     self.files.append(filename)
     decoder = Decoder(filename)
     decoder.decode()
+    width, height, bit_depth, color_type, compr_type, filter_type, interl_type = decoder.header_info()
+    
+    for widget in self.root.winfo_children():
+      widget.destroy()
+
+    Label(self.root, text="Width: " + str(width)).pack()
+    Label(self.root, text="Height: " + str(height)).pack()
+    Label(self.root, text="Bit depth: " + str(bit_depth)).pack()
+    Label(self.root, text="Color type: " + str(color_type)).pack()
+    Label(self.root, text="Compression type: " + str(compr_type)).pack()
+    Label(self.root, text="Filter type: " + str(filter_type)).pack()
+    Label(self.root, text="Interline type: " + str(interl_type)).pack()
     
     display(filename)

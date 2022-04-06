@@ -43,5 +43,4 @@ class Decoder:
         compr_type = self.critical_chunks[0][1][10]
         filter_type = self.critical_chunks[0][1][11]
         interl_type = self.critical_chunks[0][1][12]
-        print(f"Width: {width} \nHeight: {height}\nBit depth: {bit_depth}\nColor type: {color_type}")
-        print(f"Compr type: {compr_type}\nFilter type: {filter_type}\nInterl type: {interl_type}")
+        return width, height, bit_depth, color_type, compr_type, filter_type, interl_type
