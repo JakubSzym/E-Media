@@ -19,7 +19,7 @@ class Driver:
     self.files.append(filename)
     decoder = Decoder(filename)
     decoder.decode()
-    width, height, bit_depth, color_type, compr_type, filter_type, interl_type = decoder.header_info()
+    width, height, bit_depth, color_type, compr_type, filter_type, interl_type, normal_image_size, reduced_image_size = decoder.header_info()
     
     for widget in self.root.winfo_children():
       widget.destroy()
@@ -31,5 +31,8 @@ class Driver:
     Label(self.root, text="Compression type: " + str(compr_type)).pack()
     Label(self.root, text="Filter type: " + str(filter_type)).pack()
     Label(self.root, text="Interline type: " + str(interl_type)).pack()
-    
+    Label(self.root, text="Normal image size (bytes): " + str(normal_image_size)).pack()
+    Label(self.root, text="Reduced image size (bytes): " + str(reduced_image_size)).pack()
+
+    decoder.make_reduced_image()
     display(filename)
