@@ -19,5 +19,8 @@ class ImageViewer:
         driver.root.place(relwidth=0.8, relheight=0.8, relx=0.1, rely=0.1)
         addFile = Button(root, text="Open file", padx=10, pady=5, fg="white", bg="#263D42", command=driver.addFile)
         addFile.pack()
+
+        checkFFT = Button(root, text="Check FFT", padx=10, pady=5, fg="white", bg="#263D42", command=driver.check)
+        checkFFT.pack()
         root.mainloop()
     

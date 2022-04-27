@@ -6,7 +6,7 @@
 from tkinter import Label, filedialog
 from decoder import Decoder
 from cv2 import *
-from display import display
+from display import display, checkFFT
 
 class Driver:
   def __init__(self, root):
@@ -36,3 +36,6 @@ class Driver:
 
     decoder.make_reduced_image()
     display(filename)
+
+  def check(self):
+    checkFFT()
