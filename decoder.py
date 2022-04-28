@@ -21,7 +21,9 @@ class Decoder:
         self.normal_image_data = []
         self.reduced_image_data = []
         self.critical_chunks = []
+        self.critical_chunks_names = []
         self.ancillary_chunks = []
+        self.ancillary_chunks_names = []
         self.f = open(file, 'rb')
         if self.f.read(len(png_signature)) != png_signature:
             raise Exception('Invalid PNG Signature')
@@ -38,9 +40,12 @@ class Decoder:
             if str(chunk_type)[2:-1] in critical_chunks:
                 self.reduced_image_data.append((chunk_type, chunk_length, chunk_data, chunk_crc))
                 self.critical_chunks.append((chunk_type, chunk_data))
+                self.critical_chunks_names.append(chunk_type)
+
                 self.reduced_image_bytes += 12 + chunk_length
             elif str(chunk_type)[2:-1] in ancillary_chunks:
                 self.ancillary_chunks.append((chunk_type, chunk_data))
+                self.ancillary_chunks_names.append(chunk_type)
             if(chunk_type == b'IEND'):
                 break
 
@@ -56,7 +61,7 @@ class Decoder:
         compr_type = self.critical_chunks[0][1][10]
         filter_type = self.critical_chunks[0][1][11]
         interl_type = self.critical_chunks[0][1][12]
-        return width, height, bit_depth, color_type, compr_type, filter_type, interl_type, self.normal_image_bytes, self.reduced_image_bytes
+        return width, height, bit_depth, color_type, compr_type, filter_type, interl_type, self.normal_image_bytes, self.reduced_image_bytes, self.critical_chunks_names, self.ancillary_chunks_names
 
     def make_reduced_image(self):
         f = open("reduced_image.png","wb")
