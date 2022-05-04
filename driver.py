@@ -6,7 +6,7 @@
 from tkinter import Label, filedialog
 from decoder import Decoder
 from cv2 import *
-from display import display, checkFFT
+from fft import display, checkFFT
 
 class Driver:
   def __init__(self, root):
