@@ -58,8 +58,10 @@ class Decoder:
         interl_type = self.critical_chunks[0][1][12]
         return width, height, bit_depth, color_type, compr_type, filter_type, interl_type, self.normal_image_bytes, self.reduced_image_bytes
 
-    def make_reduced_image(self):
-        f = open("reduced_image.png","wb")
+    def make_reduced_image(self, filename):
+        path = filename.split('/')
+        reducedImgName = "reduced_" + path[len(path) - 1]
+        f = open(reducedImgName,"wb")
         f.write(png_signature)
         for type, length, data, crc in self.reduced_image_data:
             bites = length.to_bytes(4, byteorder='big')

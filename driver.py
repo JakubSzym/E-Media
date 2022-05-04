@@ -34,7 +34,7 @@ class Driver:
     Label(self.root, text="Normal image size (bytes): " + str(normal_image_size)).pack()
     Label(self.root, text="Reduced image size (bytes): " + str(reduced_image_size)).pack()
 
-    decoder.make_reduced_image()
+    decoder.make_reduced_image(filename)
     display(filename)
 
   def check(self):
