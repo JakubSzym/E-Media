@@ -8,7 +8,7 @@
 from tkinter import *
 from tkinter import filedialog
 from turtle import bgcolor
-from PIL import ImageTk,Image  
+from PIL import ImageTk, Image
 from decoder import Decoder
 import fft
 
@@ -79,7 +79,7 @@ class ImageViewer:
             Label(self.chunks_info, text=str(i)).grid()
 
         fft.display(self.filename)
-        decoder.make_reduced_image()
+        decoder.make_reduced_image(self.filename)
 
         im = Image.open(self.filename)
         newsize = (850, 400)
