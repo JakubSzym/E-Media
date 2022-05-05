@@ -7,13 +7,14 @@ import matplotlib.image as mpimg
 def display(file):
   img = cv2.imread(file,0)
   
-  img_float32 = np.float32(img)
+  #img_float32 = np.float32(img)
 
-  dft = cv2.dft(img_float32, flags = cv2.DFT_COMPLEX_OUTPUT)
-  dft_shift = np.fft.fftshift(dft)
+  #dft = cv2.dft(img_float32, flags = cv2.DFT_COMPLEX_OUTPUT)
+  ft = np.fft.fft2(img)
+  ft_shift = np.fft.fftshift(ft)
 
-  magnitudeSpectrum = 20*np.log(cv2.magnitude(dft_shift[:,:,0],dft_shift[:,:,1]))
-  phaseSpectrum = np.log(cv2.phase(dft_shift[:,:,0],dft_shift[:,:,1]))
+  magnitudeSpectrum = 20*np.log(np.abs(ft_shift))
+  phaseSpectrum = np.log(np.angle(ft_shift))
 
   img = mpimg.imread(file)
 
@@ -41,17 +42,17 @@ def checkFFT():
   imgStraight = cv2.imread("test_images/Lorem-Ipsum.png", 0)
   imgSkew  = cv2.imread("test_images/Lorem-Ipsum-krzywe.png", 0)
 
-  imgStraight_float32 = np.float32(imgStraight)
-  imgSkew_float32 = np.float32(imgSkew)
+  #imgStraight_float32 = np.float32(imgStraight)
+  #imgSkew_float32 = np.float32(imgSkew)
 
-  dftStraight = cv2.dft(imgStraight_float32 ,flags=cv2.DFT_COMPLEX_OUTPUT)
+  dftStraight = np.fft.fft2(imgStraight)
   dftStraight_shift = np.fft.fftshift(dftStraight)
 
-  dftSkew = cv2.dft(imgSkew_float32, flags=cv2.DFT_COMPLEX_OUTPUT)
+  dftSkew = np.fft.fft2(imgSkew)
   dftSkew_shift = np.fft.fftshift(dftSkew)
 
-  magnitudeSpectrumStraight = 20*np.log(cv2.magnitude(dftStraight_shift[:,:,0], dftStraight_shift[:,:,1]))
-  magnitudeSpectrumSkew = 20*np.log(cv2.magnitude(dftSkew_shift[:,:,0], dftSkew_shift[:,:,1]))
+  magnitudeSpectrumStraight = 20*np.log(np.abs(dftStraight_shift))
+  magnitudeSpectrumSkew = 20*np.log(np.abs(dftSkew_shift))
 
   imgStraight = mpimg.imread("test_images/Lorem-Ipsum.png")
   imgSkew = mpimg.imread("test_images/Lorem-Ipsum-krzywe.png")
