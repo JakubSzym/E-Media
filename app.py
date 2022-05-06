@@ -1,13 +1,5 @@
-#!/usr/bin/env python3
-
-#
-# Main program
-# frontend
-#
-
 from tkinter import *
 from tkinter import filedialog
-from turtle import bgcolor
 from PIL import ImageTk, Image
 from decoder import Decoder
 import fft
@@ -85,7 +77,7 @@ class ImageViewer:
         newsize = (850, 400)
         im = im.resize(newsize)
         im.save("test_images/copy.png")
-        img = PhotoImage(Image.open("test_images/copy.png"))     
+        img = ImageTk.PhotoImage(Image.open("test_images/copy.png"))     
         self.main_image.create_image(0,0,anchor = 'nw',image = img)
         self.main_image.grid(row = 0, column = 0, rowspan = 3, columnspan = 3 )
         self.main_image = img

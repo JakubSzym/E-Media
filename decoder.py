@@ -1,5 +1,4 @@
-from logging import critical
-from struct import unpack, pack
+from struct import unpack
 import math
 
 png_signature = b'\x89PNG\r\n\x1a\n'

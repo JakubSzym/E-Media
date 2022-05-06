@@ -1,4 +1,3 @@
-from sys import flags
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -11,7 +10,7 @@ def display(file):
   ft_shift = np.fft.fftshift(ft)
 
   magnitudeSpectrum = 20*np.log(np.abs(ft_shift))
-  phaseSpectrum = np.log(np.angle(ft_shift))
+  phaseSpectrum = np.angle(ft_shift)
 
   img = mpimg.imread(file)
 
@@ -55,25 +54,21 @@ def checkFFT():
 
   plt.subplot(221)
   plt.imshow(imgStraight)
-  plt.title("Straight image")
   plt.xticks([])
   plt.yticks([])
 
   plt.subplot(222)
   plt.imshow(magnitudeSpectrumStraight, cmap="gray")
-  plt.title("Straight image spectrum")
   plt.xticks([])
   plt.yticks([])
 
   plt.subplot(223)
   plt.imshow(imgSkew)
-  plt.title("Skew image")
   plt.xticks([])
   plt.yticks([])
 
   plt.subplot(224)
   plt.imshow(magnitudeSpectrumSkew, cmap="gray")
-  plt.title("Skew image spectrum")
   plt.xticks([])
   plt.yticks([])
 
