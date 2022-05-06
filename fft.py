@@ -7,9 +7,6 @@ import matplotlib.image as mpimg
 def display(file):
   img = cv2.imread(file,0)
   
-  #img_float32 = np.float32(img)
-
-  #dft = cv2.dft(img_float32, flags = cv2.DFT_COMPLEX_OUTPUT)
   ft = np.fft.fft2(img)
   ft_shift = np.fft.fftshift(ft)
 
@@ -41,9 +38,6 @@ def display(file):
 def checkFFT():
   imgStraight = cv2.imread("test_images/Lorem-Ipsum.png", 0)
   imgSkew  = cv2.imread("test_images/Lorem-Ipsum-krzywe.png", 0)
-
-  #imgStraight_float32 = np.float32(imgStraight)
-  #imgSkew_float32 = np.float32(imgSkew)
 
   dftStraight = np.fft.fft2(imgStraight)
   dftStraight_shift = np.fft.fftshift(dftStraight)
