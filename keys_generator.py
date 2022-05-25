@@ -3,7 +3,7 @@ from numpy import mod, power
 import rsa
 import random
 
-def gcd(p,q):
+def gcd(p, q):
     while q != 0:
         p, q = q, p % q
     return p
@@ -24,14 +24,14 @@ def isPrime(n):
 
 class KeysGenerator():
     def generateNewKeys(self):
-        primes = [i for i in range(1000,10000) if isPrime(i)]
+        primes = [i for i in range(10, 100) if isPrime(i)]
         p = random.choice(primes)
         q = random.choice(primes)
         N = p * q
         T = (p - 1) * (q - 1)
-        possibleE = [i for i in range(3, T) if (isCoprime(i, T) and isCoprime(i, N))]
+        possibleE = [i for i in range(3, T) if (isCoprime(i, T))]
         e = random.choice(possibleE)
-        possibleD = [i for i in range(3, T) if (e * i) % T == 1]
+        possibleD = [i for i in range(3, T) if ((e * i) % T == 1 and isCoprime(i, N))]
         d = random.choice(possibleD)
         self.pubKey = (e, N)
         self.privKey = (d, N)
@@ -51,9 +51,9 @@ class KeysGenerator():
     def getKeysFromFile(self):
         with open("keys/public_key.dat", "r") as f:
             self.pubKey = tuple(map(int, f.readline().split(',')))
-
         with open("keys/private_key.dat", "r") as f:
             self.privKey = tuple(map(int, f.readline().split(',')))
+        return (self.pubKey, self.privKey)
 
     def encrypt(self, hex):
         self.getKeysFromFile()

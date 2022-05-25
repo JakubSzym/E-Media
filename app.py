@@ -1,8 +1,10 @@
 from tkinter import *
 from tkinter import filedialog
 from PIL import ImageTk, Image
-from decoder import Decoder
+from chunk_reader import ChunkReader
+from encrypter import Encrypter
 import fft
+from keys_generator import KeysGenerator
 
 class ImageViewer:
     def __init__(self):
@@ -27,8 +29,10 @@ class ImageViewer:
         #Buttons
         self.addFile = Button(self.root, text="Open file",pady=5, fg="white", bg="#263D42", command=self.get_file)
         self.addFile.grid(row = 4, columnspan = 4)
-        self.checkFFT = Button(self.root, text="Check FFT", pady=5, fg="white", bg="#263D42", command=self.check)
+        self.checkFFT = Button(self.root, text="Check FFT", pady=5, fg="white", bg="#263D42") #, command=self.check)
         self.checkFFT.grid(row = 5, columnspan = 4)
+        self.encryptImage = Button(self.root, text="Encrypt file", pady=5, fg="white", bg="#263D42", command=self.encrypt)
+        self.encryptImage.grid(row = 6, columnspan = 4)
 
         self.root.mainloop()
 
@@ -37,9 +41,9 @@ class ImageViewer:
         self.filename = filedialog.askopenfilename(initialdir="~/Pictures",
         title = "Select file", filetypes = (("PNG Images", "*.png"), ("PNG Images", "*.PNG")))
 
-        decoder = Decoder(self.filename)
-        decoder.decode()
-        width, height, bit_depth, color_type, compr_type, filter_type, interl_type, normal_image_size, reduced_image_size, critical_chunks, ancillary_chunks = decoder.header_info()
+        chunkReader = ChunkReader(self.filename)
+        chunkReader.decode()
+        width, height, bit_depth, color_type, compr_type, filter_type, interl_type, normal_image_size, reduced_image_size, critical_chunks, ancillary_chunks = chunkReader.header_info()
         self.pixels_info.destroy()
         self.header_info.destroy()
         self.size_info.destroy()
@@ -69,19 +73,24 @@ class ImageViewer:
         Label(self.chunks_info, text="Ancillary chunks: ").grid()
         for i in ancillary_chunks:
             Label(self.chunks_info, text=str(i)).grid()
+        #fft.display(self.filename)
+        #chunkReader.make_reduced_image(self.filename)
+        # im = Image.open(self.filename)
+        # newsize = (850, 400)
+        # im = im.resize(newsize)
+        # im.save("test_images/copy.png")
+        # img = ImageTk.PhotoImage(Image.open("test_images/copy.png"))     
+        # self.main_image.create_image(0,0,anchor = 'nw',image = img)
+        # self.main_image.grid(row = 0, column = 0, rowspan = 3, columnspan = 3 )
+        # self.main_image = img
 
-        fft.display(self.filename)
-        decoder.make_reduced_image(self.filename)
+    #def check(self):
+        #fft.checkFFT()
 
-        im = Image.open(self.filename)
-        newsize = (850, 400)
-        im = im.resize(newsize)
-        im.save("test_images/copy.png")
-        img = ImageTk.PhotoImage(Image.open("test_images/copy.png"))     
-        self.main_image.create_image(0,0,anchor = 'nw',image = img)
-        self.main_image.grid(row = 0, column = 0, rowspan = 3, columnspan = 3 )
-        self.main_image = img
+    def encrypt(self):
+        keys = KeysGenerator()
+        keys.generateNewKeys()
+        encrypter = Encrypter(self.filename)
+        encrypter.encrypt()
 
-    def check(self):
-        fft.checkFFT()
 

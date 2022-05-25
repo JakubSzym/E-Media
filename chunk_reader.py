@@ -13,7 +13,7 @@ def append_hex(a, b):
     return (a << sizeof_b_hex) | b
 
 
-class Decoder:
+class ChunkReader:
     def __init__(self, file):
         self.normal_image_bytes = 8
         self.reduced_image_bytes = 8
