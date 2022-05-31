@@ -1,4 +1,3 @@
-
 from struct import unpack
 import struct
 from numpy import mod, power
@@ -12,7 +11,7 @@ class Encrypter():
     def __init__(self, file):
         self.filename = file
         self.image_data = []
-        self.block_size = keys_generator.M / 4
+        self.block_size = keys_generator.M / 4 - 1
         self.f = open(file, 'rb')
         if self.f.read(len(PNG_SIGNATURE)) != PNG_SIGNATURE:
             raise Exception('Invalid PNG Signature')
@@ -35,9 +34,7 @@ class Encrypter():
         keysGenerator.generateNewKeys()
         (pubKey, privKey) = keysGenerator.getKeysFromFile()
        
-
         for type, length, data, crc in self.image_data:
-            sum_num_bytes = 0
             if type == b'IDAT':
                 rest = length % self.block_size
                 blocks = length / self.block_size
@@ -45,17 +42,16 @@ class Encrypter():
                 blocks = int(blocks)
                 byte_sum = 0x00
                 num_bytes = 0
-                bites = int(length + self.block_size - rest).to_bytes(4, byteorder = 'big')
+                bites = int(length + blocks + self.block_size - rest + 1).to_bytes(4, byteorder = 'big')
                 f.write(bites)
                 f.write(type)
                 for byte in data:
                     if blocks != 0:
                         byte_sum  = append_hex(byte_sum, byte)
                         num_bytes += 1
-                        sum_num_bytes += 1
                         if num_bytes == self.block_size:
                             encrypted_value = pow(byte_sum, pubKey[0], pubKey[1])
-                            encrypted_byte = encrypted_value.to_bytes(int(self.block_size), byteorder = 'big')
+                            encrypted_byte = encrypted_value.to_bytes(int(self.block_size + 1), byteorder = 'big')
                             f.write(encrypted_byte)
                             num_bytes = 0
                             byte_sum = 0
@@ -63,16 +59,14 @@ class Encrypter():
                     elif rest != 0:
                         byte_sum  = append_hex(byte_sum, byte)
                         num_bytes += 1
-                        sum_num_bytes += 1
                         if num_bytes == rest:
                             encrypted_value = pow(byte_sum, pubKey[0], pubKey[1])
-                            encrypted_byte = encrypted_value.to_bytes(int(self.block_size), byteorder = 'big')
+                            encrypted_byte = encrypted_value.to_bytes(int(self.block_size + 1), byteorder = 'big')
                             f.write(encrypted_byte)
             else:
                 bites = length.to_bytes(4, byteorder = 'big')
                 f.write(bites)
                 f.write(type)
                 f.write(data)
-            print(sum_num_bytes)
             f.write(crc[0])
         f.close()
