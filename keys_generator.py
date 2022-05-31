@@ -4,6 +4,8 @@ import rsa
 import random
 import sympy
 
+M = 256
+
 def gcd(p, q):
     while q != 0:
         p, q = q, p % q
@@ -20,12 +22,12 @@ def generateLargePrime(bits):
 
 class KeysGenerator():
     def generateNewKeys(self):
-        p = generateLargePrime(256)
-        q = generateLargePrime(256)
+        p = generateLargePrime(M)
+        q = generateLargePrime(M)
         N = p * q
         T = (p - 1) * (q - 1)
         while True:
-            possibleE = generateLargePrime(256)
+            possibleE = generateLargePrime(M)
             if (isCoprime(possibleE, T) and possibleE < T):
                 break
         e = possibleE
