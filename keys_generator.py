@@ -3,6 +3,7 @@ from numpy import mod, power
 import rsa
 import random
 import sympy
+from gmpy2 import mpz
 
 M = 256
 
@@ -62,5 +63,5 @@ class KeysGenerator():
     
     def decrypt(self, encryptedValue):
         self.getKeysFromFile()
-        decryptedValue = pow(encryptedValue, self.privKey[0], self.privKey[1])
+        decryptedValue = pow(mpz(encryptedValue), mpz(self.privKey[0]), mpz(self.privKey[1]))
         return decryptedValue

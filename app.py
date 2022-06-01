@@ -3,6 +3,7 @@ from tkinter import filedialog
 from PIL import ImageTk, Image
 from chunk_reader import ChunkReader
 from encrypter import Encrypter
+from decrypter import Decrypter
 import fft
 from keys_generator import KeysGenerator
 
@@ -31,7 +32,7 @@ class ImageViewer:
         self.addFile.grid(row = 4, columnspan = 4)
         self.checkFFT = Button(self.root, text="Check FFT", pady=5, fg="white", bg="#263D42") #, command=self.check)
         self.checkFFT.grid(row = 5, columnspan = 4)
-        self.encryptImage = Button(self.root, text="Encrypt file", pady=5, fg="white", bg="#263D42", command=self.encrypt)
+        self.encryptImage = Button(self.root, text="Encrypt file", pady=5, fg="white", bg="#263D42", command=self.rsa)
         self.encryptImage.grid(row = 6, columnspan = 4)
         self.root.mainloop()
 
@@ -66,9 +67,9 @@ class ImageViewer:
         Label(self.header_info, text="Interline type: " + str(interl_type)).grid()
         Label(self.size_info, text="Normal image size (bytes): " + str(normal_image_size)).grid()
         Label(self.size_info, text="Reduced image size (bytes): " + str(reduced_image_size)).grid()
-        Label(self.chunks_info, text="Critical chunks: ").grid()
-        for i in critical_chunks:
-            Label(self.chunks_info, text=str(i)).grid()
+        #Label(self.chunks_info, text="Critical chunks: ").grid()
+        #for i in critical_chunks:
+            #Label(self.chunks_info, text=str(i)).grid()
         Label(self.chunks_info, text="Ancillary chunks: ").grid()
         for i in ancillary_chunks:
             Label(self.chunks_info, text=str(i)).grid()
@@ -86,8 +87,13 @@ class ImageViewer:
     #def check(self):
         #fft.checkFFT()
 
-    def encrypt(self):
+    def rsa(self):
         keys = KeysGenerator()
         keys.generateNewKeys()
+        print("Calling encrypter")
         encrypter = Encrypter(self.filename)
-        encrypter.encrypt()
+        encodedData, imageData = encrypter.encrypt()
+        print("Calling decrypter")
+        decrypter = Decrypter(encodedData, imageData, self.filename)
+        decrypter.decrypt()
+
