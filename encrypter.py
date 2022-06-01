@@ -1,9 +1,14 @@
 from struct import unpack
 import struct
+import cv2
 from numpy import mod, power
+import sympy
 from chunk_reader import append_hex
 from keys_generator import KeysGenerator
 import keys_generator
+import numpy
+import sympy
+import gmpy2
 
 PNG_SIGNATURE = b'\x89PNG\r\n\x1a\n'
 
@@ -33,40 +38,15 @@ class Encrypter():
         keysGenerator = KeysGenerator()
         keysGenerator.generateNewKeys()
         (pubKey, privKey) = keysGenerator.getKeysFromFile()
-       
-        for type, length, data, crc in self.image_data:
-            if type == b'IDAT':
-                rest = length % self.block_size
-                blocks = length / self.block_size
-                rest = int(rest)
-                blocks = int(blocks)
-                byte_sum = 0x00
-                num_bytes = 0
-                bites = int(length + blocks + self.block_size - rest + 1).to_bytes(4, byteorder = 'big')
-                f.write(bites)
-                f.write(type)
-                for byte in data:
-                    if blocks != 0:
-                        byte_sum  = append_hex(byte_sum, byte)
-                        num_bytes += 1
-                        if num_bytes == self.block_size:
-                            encrypted_value = pow(byte_sum, pubKey[0], pubKey[1])
-                            encrypted_byte = encrypted_value.to_bytes(int(self.block_size + 1), byteorder = 'big')
-                            f.write(encrypted_byte)
-                            num_bytes = 0
-                            byte_sum = 0
-                            blocks -= 1
-                    elif rest != 0:
-                        byte_sum  = append_hex(byte_sum, byte)
-                        num_bytes += 1
-                        if num_bytes == rest:
-                            encrypted_value = pow(byte_sum, pubKey[0], pubKey[1])
-                            encrypted_byte = encrypted_value.to_bytes(int(self.block_size + 1), byteorder = 'big')
-                            f.write(encrypted_byte)
-            else:
-                bites = length.to_bytes(4, byteorder = 'big')
-                f.write(bites)
-                f.write(type)
-                f.write(data)
-            f.write(crc[0])
-        f.close()
+        image = cv2.imread(self.filename)
+        rows, cols, _ = image.shape
+        #data = numpy.zeros(image.shape)
+        data = [ [ [ 0 for i in range(image.shape[2]) ] for j in range(image.shape[1]) ] for k in range(image.shape[0])]
+        
+        for i in range(rows):
+            for j in range(cols):
+                for k in range(3):
+                    data[i][j][k] = image[i,j,k]
+                    data[i][j][k] = pow(int(data[i][j][k]), pubKey[0], pubKey[1])
+                    image[i,j,k] = sympy.Mod(data[i][j][k] ,256)
+        cv2.imwrite("test_images/lin.png", image)

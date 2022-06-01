@@ -6,4 +6,4 @@ from keys_generator import *
 
 if __name__== "__main__":    
     img = ImageViewer()
-    #keysGenerator = KeysGenerator()
+    

@@ -33,7 +33,6 @@ class ImageViewer:
         self.checkFFT.grid(row = 5, columnspan = 4)
         self.encryptImage = Button(self.root, text="Encrypt file", pady=5, fg="white", bg="#263D42", command=self.encrypt)
         self.encryptImage.grid(row = 6, columnspan = 4)
-
         self.root.mainloop()
 
     def get_file(self):
@@ -92,5 +91,3 @@ class ImageViewer:
         keys.generateNewKeys()
         encrypter = Encrypter(self.filename)
         encrypter.encrypt()
-
-
