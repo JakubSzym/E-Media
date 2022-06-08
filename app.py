@@ -32,8 +32,10 @@ class ImageViewer:
         self.addFile.grid(row = 4, columnspan = 4)
         self.checkFFT = Button(self.root, text="Check FFT", pady=5, fg="white", bg="#263D42") #, command=self.check)
         self.checkFFT.grid(row = 5, columnspan = 4)
-        self.encryptImage = Button(self.root, text="Encrypt file", pady=5, fg="white", bg="#263D42", command=self.rsa)
+        self.encryptImage = Button(self.root, text="Encrypt file", pady=5, fg="white", bg="#263D42", command=self.encrypt)
         self.encryptImage.grid(row = 6, columnspan = 4)
+        self.decryptImage = Button(self.root, text="Decrypt file", pady=5, fg="white", bg="#263D42", command=self.decrypt)
+        self.decryptImage.grid(row = 7, columnspan = 4)
         self.root.mainloop()
 
     def get_file(self):
@@ -87,13 +89,15 @@ class ImageViewer:
     #def check(self):
         #fft.checkFFT()
 
-    def rsa(self):
+    def encrypt(self):
         keys = KeysGenerator()
         keys.generateNewKeys()
         print("Calling encrypter")
         encrypter = Encrypter(self.filename)
-        encodedData, imageData = encrypter.encrypt()
+        encrypter.encrypt()
+
+    def decrypt(self):
         print("Calling decrypter")
-        decrypter = Decrypter(encodedData, imageData, self.filename)
+        decrypter = Decrypter(self.filename)
         decrypter.decrypt()
 

@@ -10,18 +10,28 @@ from keys_generator import KeysGenerator
 
 
 class Decrypter:
-  def __init__(self, encryptedData, outImage, filename) -> None:
-    self.inData = encryptedData
-    self.outImage = outImage
+  def __init__(self, filename):
     self.filename = filename
-  
+
   def decrypt(self):
+    path = self.filename.split('/')
+    clearFilename = path[len(path) - 1]
+    encryptedImage = "encrypted_test_images/encrypted_" + clearFilename
+    image = cv2.imread(encryptedImage)
+    rows, cols, colors = image.shape
+    encryptedData = [ [ [ 0 for i in range(image.shape[2]) ] for j in range(image.shape[1]) ] for k in range(image.shape[0])]
+    encryptedPixels = "encrypted_test_images/encrypted_pixels_" + clearFilename[:-4] + ".dat"
+    with open(encryptedPixels) as f:
+      for i in range(rows):
+        for j in range(cols):
+            line = f.readline()
+            data = line.split(", ")
+            encryptedData[i][j] = data
+
     generator = KeysGenerator()
-    generator.getKeysFromFile()
-    rows, cols, colors = self.outImage.shape
+    (pubKey, privKey) = generator.getKeysFromFile()
     for i in range(rows):
       for j in range(cols):
         for k in range(colors):
-          self.inData[i][j][k] = generator.decrypt(mpz(self.inData[i][j][k]))
-          self.outImage[i,j,k] = self.inData[i][j][k]
-    cv2.imwrite("test_images/decoded.png", self.outImage)
+          image[i,j,k] = pow(int(encryptedData[i][j][k]), privKey[0], privKey[1])
+    cv2.imwrite("decrypted_test_images/decrypted_" + clearFilename, image)
