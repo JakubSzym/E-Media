@@ -33,5 +33,5 @@ class Decrypter:
     for i in range(rows):
       for j in range(cols):
         for k in range(colors):
-          image[i,j,k] = pow(int(encryptedData[i][j][k]), privKey[0], privKey[1])
+          image[i,j,k] = pow(mpz(int(encryptedData[i][j][k])), privKey[0], privKey[1])
     cv2.imwrite("decrypted_test_images/decrypted_" + clearFilename, image)
