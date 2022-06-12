@@ -1,16 +1,13 @@
 from struct import unpack
-import struct
 import cv2
 from numpy import mod, power
 import sympy
 from chunk_reader import append_hex
 from keys_generator import KeysGenerator
-import keys_generator
-import numpy
 import sympy
-import gmpy2
-from PIL import Image
-from PIL.PngImagePlugin import PngInfo
+from gmpy2 import mpz
+from PIL import Image 
+from Crypto.Cipher import AES 
 
 PNG_SIGNATURE = b'\x89PNG\r\n\x1a\n'
 
@@ -36,10 +33,41 @@ class Encrypter():
             for j in range(cols):
                 for k in range(3):
                     data[i][j][k] = image[i,j,k]
-                    data[i][j][k] = pow(int(data[i][j][k]), pubKey[0], pubKey[1])
+                    data[i][j][k] = pow(mpz(data[i][j][k]), pubKey[0], pubKey[1])
                     image[i,j,k] = sympy.Mod(data[i][j][k] ,256)
                     f.write(str(data[i][j][k]) + ", ")
                 f.write("\n")
         encryptedImgName = "encrypted_" + path[len(path) - 1]
         cv2.imwrite("encrypted_test_images/" + encryptedImgName, image)
+        self.encryptECB(self.filename, b"1234567890abcdef")
         f.close()
+
+    def pad(self,data):
+        return data + b"\x00"*(16-len(data)%16)
+    
+    def toRGB(self, data):
+        r, g, b = tuple(map(lambda d: [data[i] for i in range(0,len(data)) if i % 3 == d], [0, 1, 2])) 
+        pixels = tuple(zip(r,g,b)) 
+        return pixels
+
+    def aes_ecb_encrypt(self, key, data, mode=AES.MODE_ECB): 
+        aes = AES.new(key, mode) 
+        outData = aes.encrypt(data) 
+        return outData
+
+    def encryptECB(self, filename, key):
+        path = filename.split('/')
+        clearFilename = path[len(path) - 1]
+        im = Image.open(filename) 
+        data = im.convert("RGB").tobytes()
+        originalData = len(data) 
+        encodedData = self.toRGB(self.ecb_encrypt(key, self.pad(data))[:originalData])
+        im2 = Image.new(im.mode, im.size) 
+        im2.putdata(encodedData)
+        outFilename = "ecb_" + clearFilename
+        im2.save("encrypted_test_images/" + outFilename, "PNG")
+
+    def ecb_encrypt(self, key, data, mode=AES.MODE_ECB): 
+        aes = AES.new(key, mode) 
+        encryptedData = aes.encrypt(data) 
+        return encryptedData

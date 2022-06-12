@@ -5,7 +5,7 @@ import random
 import sympy
 from gmpy2 import mpz
 
-M = 128
+M = 256
 
 def gcd(p, q):
     while q != 0:
