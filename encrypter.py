@@ -20,7 +20,7 @@ class Encrypter():
             raise Exception('Invalid PNG Signature')
 
     def encrypt(self):
-        #self.encryptFromLibrary()
+        self.encryptFromLibrary()
         path = self.filename.split('/')
         clearFilename = path[len(path) - 1]
         encryptedPixelsName = "encrypted_pixels_" + clearFilename[:-4] + ".dat"
