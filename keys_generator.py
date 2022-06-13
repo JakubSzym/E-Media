@@ -1,6 +1,5 @@
 from matplotlib.pyplot import get
 from numpy import mod, power
-import rsa
 import random
 import sympy
 from gmpy2 import mpz

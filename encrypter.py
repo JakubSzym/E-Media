@@ -8,6 +8,7 @@ import sympy
 from gmpy2 import mpz
 from PIL import Image 
 from Crypto.Cipher import AES 
+import rsa
 
 PNG_SIGNATURE = b'\x89PNG\r\n\x1a\n'
 
@@ -19,6 +20,7 @@ class Encrypter():
             raise Exception('Invalid PNG Signature')
 
     def encrypt(self):
+        #self.encryptFromLibrary()
         path = self.filename.split('/')
         clearFilename = path[len(path) - 1]
         encryptedPixelsName = "encrypted_pixels_" + clearFilename[:-4] + ".dat"
@@ -71,3 +73,31 @@ class Encrypter():
         aes = AES.new(key, mode) 
         encryptedData = aes.encrypt(data) 
         return encryptedData
+
+    def encryptFromLibrary(self):
+        (pubKey, privKey) = rsa.newkeys(1024)
+        with open("keys/RSA_public_key.pem", "wb") as f:
+            f.write(pubKey.save_pkcs1("PEM"))
+        
+        with open("keys/RSA_private_key.pem", "wb") as f:
+            f.write(privKey.save_pkcs1("PEM"))
+
+        path = self.filename.split('/')
+        clearFilename = path[len(path) - 1]
+        encryptedPixelsName = "RSA_encrypted_pixels_" + clearFilename[:-4] + ".dat"
+
+        image = cv2.imread(self.filename)
+        rows, cols, _ = image.shape
+        f = open("encrypted_test_images/" + encryptedPixelsName, "w")
+        data = [ [ [ 0 for i in range(image.shape[2]) ] for j in range(image.shape[1]) ] for k in range(image.shape[0])]
+        for i in range(rows):
+            for j in range(cols):
+                for k in range(3):
+                    data[i][j][k] = int(image[i,j,k])
+                    data[i][j][k] = rsa.encrypt(data[i][j][k].to_bytes(2,'big'), pubKey)
+                    image[i,j,k] = sympy.Mod(int.from_bytes(data[i][j][k],'big') ,256)
+                    f.write(str(int.from_bytes(data[i][j][k], "big")) + ", ")
+                f.write("\n")
+        encryptedImgName = "RSA_encrypted_" + path[len(path) - 1]
+        cv2.imwrite("encrypted_test_images/" + encryptedImgName, image)
+        f.close()

@@ -30,12 +30,10 @@ class ImageViewer:
         #Buttons
         self.addFile = Button(self.root, text="Open file",pady=5, fg="white", bg="#263D42", command=self.get_file)
         self.addFile.grid(row = 4, columnspan = 4)
-        self.checkFFT = Button(self.root, text="Check FFT", pady=5, fg="white", bg="#263D42") #, command=self.check)
-        self.checkFFT.grid(row = 5, columnspan = 4)
         self.encryptImage = Button(self.root, text="Encrypt file", pady=5, fg="white", bg="#263D42", command=self.encrypt)
-        self.encryptImage.grid(row = 6, columnspan = 4)
+        self.encryptImage.grid(row = 5, columnspan = 4)
         self.decryptImage = Button(self.root, text="Decrypt file", pady=5, fg="white", bg="#263D42", command=self.decrypt)
-        self.decryptImage.grid(row = 7, columnspan = 4)
+        self.decryptImage.grid(row = 6, columnspan = 4)
         self.root.mainloop()
 
     def get_file(self):
