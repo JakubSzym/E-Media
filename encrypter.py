@@ -6,8 +6,6 @@ from chunk_reader import append_hex
 from keys_generator import KeysGenerator
 import sympy
 from gmpy2 import mpz
-from PIL import Image 
-from Crypto.Cipher import AES 
 import rsa
 
 PNG_SIGNATURE = b'\x89PNG\r\n\x1a\n'
@@ -41,38 +39,7 @@ class Encrypter():
                 f.write("\n")
         encryptedImgName = "encrypted_" + path[len(path) - 1]
         cv2.imwrite("encrypted_test_images/" + encryptedImgName, image)
-        self.encryptECB(self.filename, b"1234567890abcdef")
         f.close()
-
-    def pad(self,data):
-        return data + b"\x00"*(16-len(data)%16)
-    
-    def toRGB(self, data):
-        r, g, b = tuple(map(lambda d: [data[i] for i in range(0,len(data)) if i % 3 == d], [0, 1, 2])) 
-        pixels = tuple(zip(r,g,b)) 
-        return pixels
-
-    def aes_ecb_encrypt(self, key, data, mode=AES.MODE_ECB): 
-        aes = AES.new(key, mode) 
-        outData = aes.encrypt(data) 
-        return outData
-
-    def encryptECB(self, filename, key):
-        path = filename.split('/')
-        clearFilename = path[len(path) - 1]
-        im = Image.open(filename) 
-        data = im.convert("RGB").tobytes()
-        originalData = len(data) 
-        encodedData = self.toRGB(self.ecb_encrypt(key, self.pad(data))[:originalData])
-        im2 = Image.new(im.mode, im.size) 
-        im2.putdata(encodedData)
-        outFilename = "ecb_" + clearFilename
-        im2.save("encrypted_test_images/" + outFilename, "PNG")
-
-    def ecb_encrypt(self, key, data, mode=AES.MODE_ECB): 
-        aes = AES.new(key, mode) 
-        encryptedData = aes.encrypt(data) 
-        return encryptedData
 
     def encryptFromLibrary(self):
         (pubKey, privKey) = rsa.newkeys(1024)
