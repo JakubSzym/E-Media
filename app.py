@@ -91,12 +91,6 @@ class ImageViewer:
         pyplot.yticks([])
 
         pyplot.subplot(234)
-        pyplot.imshow(imgEcbEncrypted)
-        pyplot.title("ECB encrypted image")
-        pyplot.xticks([])
-        pyplot.yticks([])
-
-        pyplot.subplot(235)
         pyplot.imshow(imgRSAEncrypted)
         pyplot.title("Built-in RSA encrypted image")
         pyplot.xticks([])

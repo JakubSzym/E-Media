@@ -6,8 +6,6 @@ from chunk_reader import append_hex
 from keys_generator import KeysGenerator
 import sympy
 from gmpy2 import mpz
-from PIL import Image 
-from Crypto.Cipher import AES 
 import rsa
 import time
 
@@ -48,7 +46,6 @@ class Encrypter():
                 f.write("\n")
         encryptedImgName = "encrypted_" + path[len(path) - 1]
         cv2.imwrite("encrypted_test_images/" + encryptedImgName, image)
-        self.encryptECB(self.filename, b"1234567890abcdef")
         f.close()
 
     def encryptFromLibrary(self):

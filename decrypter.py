@@ -14,7 +14,7 @@ class Decrypter:
     self.filename = filename
 
   def decrypt(self):
-    #self.decryptFromLibrary()
+    self.decryptFromLibrary()
     path = self.filename.split('/')
     clearFilename = path[len(path) - 1]
     encryptedImage = "encrypted_test_images/encrypted_" + clearFilename
