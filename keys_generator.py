@@ -4,7 +4,7 @@ import random
 import sympy
 from gmpy2 import mpz
 
-M = 256
+#M = 256
 
 def gcd(p, q):
     while q != 0:
@@ -21,7 +21,7 @@ def generateLargePrime(bits):
             return number
 
 class KeysGenerator():
-    def generateNewKeys(self):
+    def generateNewKeys(self, M):
         p = generateLargePrime(M)
         q = generateLargePrime(M)
         N = p * q
