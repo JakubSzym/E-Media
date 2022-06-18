@@ -44,7 +44,7 @@ class ImageViewer:
 
     def encrypt(self):
         keys = KeysGenerator()
-        keys.generateNewKeys()
+        # keys.generateNewKeys()
         print("Calling encrypter")
         encrypter = Encrypter(self.filename)
         encrypter.encrypt()

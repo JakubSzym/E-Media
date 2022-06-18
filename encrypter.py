@@ -29,6 +29,7 @@ class Encrypter():
             end = time.time()
             print(str(2 ** i) + " Implemented key generation time: " + str(end - start) + "s.")
         print('\n')
+        keysGenerator.generateNewKeys(256)
         self.encryptFromLibrary()
 
         (pubKey, privKey) = keysGenerator.getKeysFromFile()
@@ -40,10 +41,14 @@ class Encrypter():
             for j in range(cols):
                 for k in range(3):
                     data[i][j][k] = image[i,j,k]
+                    start = time.time()
                     data[i][j][k] = pow(mpz(data[i][j][k]), pubKey[0], pubKey[1])
+                    stop = time.time()
                     image[i,j,k] = sympy.Mod(data[i][j][k] ,256)
                     f.write(str(data[i][j][k]) + ", ")
                 f.write("\n")
+        interval = stop - start
+        print("Implemented RSA: " + str(interval))
         encryptedImgName = "encrypted_" + path[len(path) - 1]
         cv2.imwrite("encrypted_test_images/" + encryptedImgName, image)
         f.close()
@@ -54,7 +59,7 @@ class Encrypter():
             (pubKey, privKey) = rsa.newkeys(2**i)
             end = time.time()
             print(str(2 ** i) + " Key generation from library time: " + str(end - start) + "s.")
-
+        (pubKey, privKey) = rsa.newkeys(256)
         with open("keys/RSA_public_key.pem", "wb") as f:
             f.write(pubKey.save_pkcs1("PEM"))
         
@@ -73,10 +78,14 @@ class Encrypter():
             for j in range(cols):
                 for k in range(3):
                     data[i][j][k] = int(image[i,j,k])
+                    start = time.time()
                     data[i][j][k] = rsa.encrypt(data[i][j][k].to_bytes(2,'big'), pubKey)
+                    stop = time.time()
                     image[i,j,k] = sympy.Mod(int.from_bytes(data[i][j][k],'big') ,256)
                     f.write(str(int.from_bytes(data[i][j][k], "big")) + ", ")
                 f.write("\n")
+        interval = stop - start
+        print("Built-in RSA: " + str(interval))
         encryptedImgName = "RSA_encrypted_" + path[len(path) - 1]
         cv2.imwrite("encrypted_test_images/" + encryptedImgName, image)
         f.close()
